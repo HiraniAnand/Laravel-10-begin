@@ -1,9 +1,4 @@
-{{ View::make('header') }}
-
-{{-- Student Registration Form --}}
-{{-- @include('form-part') --}}
-
-<form action="{{ route('make-reg') }}" method="post" style="width: 50%; margin: 10px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #fff;">
+<form action="{{ route('register') }}" method="post" style="width: 50%; margin: 10px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #fff;">
     @csrf
     <h2 style="text-align: center;">Student Profile</h2>
     <div class="form-group">
@@ -79,5 +74,3 @@
         <button type="submit" class="btn btn-primary">Register</button>
     </div>
 </form>
-
-{{ View::make('footer') }}

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
+
+Route::post('/register', [StudentController::class, 'store'])->name('register');
+Route::post('make-reg', [StudentController::class, 'makereg'])->name('make-reg');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
