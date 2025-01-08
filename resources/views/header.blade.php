@@ -14,8 +14,6 @@
 
     <!-- Scripts -->
     <script type="text/javascript" src="{{ URL::asset('resources/js/app.js') }}" ></script>
-
-    <!-- Styles -->
 </head>
 <body>
     <header>
