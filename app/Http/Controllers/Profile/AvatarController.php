@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Profile;
 
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateAvatarRequest;
 
@@ -9,11 +10,17 @@ class AvatarController extends Controller
 {
     public function update(UpdateAvatarRequest $request) {
         
-        $path = $request->file('avatar')->store('avatars');
-        auth()->user()->update(['avatar' => storage_path("app")."/$path"]);
-        dd(auth()->user());
+        $path = Storage::disk('public')->put('avatars', $request->file('avatar'));
+        // $path = $request->file('avatar')->store('avatars', 'public');
 
-        return redirect( route('profile.edit') );
+        if($oldavatar = $request->user()->avatar) {
+            Storage::disk('public')->delete($oldavatar);
+        }
+
+        auth()->user()->update(['avatar' => $path]);
+        // dd(auth()->user());
+
+        return redirect( route('profile.edit') )->with('message', 'avatar-updated');
     }
 
     // public function update(Request $request)

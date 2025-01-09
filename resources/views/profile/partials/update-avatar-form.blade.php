@@ -18,6 +18,8 @@
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             User Avatar
         </h2>
+        {{-- {{ dd(auth()->user()) }} --}}
+        <img src="{{ "storage/".auth()->user()->avatar }}" alt="User Avatar" height="100%" width="100%" style="border:1px solid black;" />
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             Add or Update User Avatar
