@@ -71,6 +71,13 @@ Route::post('/auth/redirect', function () {
 
 Route::get('/auth/callback', function () {
     $user = Socialite::driver('github')->user();
+
+    // $user = User::updateOrCreate(['email' => $user->email], [
+    //     'name' => $user->name,
+    //     'email' => $user->email,
+    //     'avatar' => $user->avatar,
+    //     'password' => bcrypt('password'),
+    // ]);
     
     $user = User::firstOrCreate(['email' => $user->email], [
         'name' => $user->name,
@@ -78,7 +85,6 @@ Route::get('/auth/callback', function () {
         'avatar' => $user->avatar,
         'password' => bcrypt('password'),
     ]);
-
     Auth::login($user, true);
     return redirect('/dashboard');
 
