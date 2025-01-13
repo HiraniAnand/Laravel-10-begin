@@ -6,6 +6,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\TicketController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -89,3 +90,10 @@ Route::get('/auth/callback', function () {
     return redirect('/dashboard');
 
 });
+
+Route::middleware('auth')->prefix('ticket')->group(function() {
+    Route::resource('/', TicketController::class);
+});
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
