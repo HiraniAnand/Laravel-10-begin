@@ -91,9 +91,7 @@ Route::get('/auth/callback', function () {
 
 });
 
-Route::middleware('auth')->prefix('ticket')->group(function() {
+Route::middleware('auth')->prefix('ticket')->name('ticket.')->group(function() {
     Route::resource('/', TicketController::class);
 });
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
