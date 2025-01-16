@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -50,10 +52,23 @@ class User extends Authenticatable
         );
     }
 
-    protected function password(): Attribute
+    // protected function password(): Attribute
+    // {
+    //     return Attribute::make(
+    //         set: fn ($value) => bcrypt($value)
+    //     );
+    // }
+
+    protected function isAdmin(): Attribute
     {
+        $admins = ['hiranianand43@gmail.com'];
         return Attribute::make(
-            set: fn ($value) => bcrypt($value)
+            get: fn () => in_array($this->email, $admins)
         );
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
     }
 }

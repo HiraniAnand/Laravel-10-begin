@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Profile;
 
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use OpenAI\Laravel\Facades\OpenAI;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateAvatarRequest;
 
 class AvatarController extends Controller
@@ -18,27 +21,29 @@ class AvatarController extends Controller
         }
 
         auth()->user()->update(['avatar' => $path]);
-        // dd(auth()->user());
 
         return redirect( route('profile.edit') )->with('message', 'avatar-updated');
     }
 
-    // public function update(Request $request)
-    // {
-    //     $request->validate([
-    //         'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //     ]);
+    public function generate(Request $request)
+    {
+        $result = OpenAI::images()->create([
+            "prompt" => 'create avatar for user with cool style animated',
+            'n'      => 1,
+            'size'   => "256x256",
+        ]);
 
-    //     $user = auth()->user();
+        $contents = file_get_contents($result->data[0]->url);
 
-    //     $avatarName = $user->id.'_avatar'.time().'.'.request()->avatar->getClientOriginalExtension();
+        $filename = Str::random(25);
 
-    //     $request->avatar->storeAs('avatars', $avatarName);
+        if ($oldAvatar = $request->user()->avatar) {
+            Storage::disk('public')->delete($oldAvatar);
+        }
 
-    //     $user->avatar = $avatarName;
-    //     $user->save();
+        Storage::disk('public')->put("avatars/$filename.jpg", $contents);
 
-    //     return back()
-    //         ->with('success','You have successfully upload image.');
-    // }
+        auth()->user()->update(['avatar' => "avatars/$filename.jpg"]);
+        return redirect(route('profile.edit'))->with('message', 'Avatar is updated');
+    }
 }

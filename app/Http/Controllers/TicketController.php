@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Ticket;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Notifications\TicketCreatedNotification;
 
 class TicketController extends Controller
 {
@@ -15,7 +17,9 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $tickets = Ticket::where('user_id', auth()->id())->get();
+        return view('ticket.index', compact('tickets'));
     }
 
     /**
@@ -51,7 +55,7 @@ class TicketController extends Controller
 
 
         // return redirect()->route('ticket.create')->with('success', 'Ticket created successfully');
-        return Response($ticket);
+        return redirect(route('ticket.index'));
     }
 
     /**
@@ -59,7 +63,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        return view('ticket.show', compact('ticket'));
     }
 
     /**
@@ -67,7 +71,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        //
+        return view('ticket.edit', compact('ticket'));
     }
 
     /**
