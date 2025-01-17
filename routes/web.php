@@ -7,6 +7,8 @@ use App\Http\Controllers\Profile\AvatarController;
 use App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\Auth\LoginController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,7 +50,6 @@ Route::get('/auth/callback', function () {
         'name' => $user->name,
         'password' => bcrypt('password'),
     ]);
-
     Auth::login($user);
     return redirect('/dashboard');
 });
@@ -56,3 +57,7 @@ Route::get('/auth/callback', function () {
 Route::middleware('auth')->group(function () {
     Route::resource('/ticket', TicketController::class);
 });
+
+
+Route::get('login/github', [LoginController::class, 'redirectToGitHub'])->name('login.github');
+Route::get('login/github/callback', [LoginController::class, 'handleGitHubCallback']);
